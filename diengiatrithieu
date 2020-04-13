@@ -1,0 +1,20 @@
+import pandas as pd
+import numpy as np
+df = pd.read_csv("input.csv", index_col=0)
+f = open("log.txt", "w+")
+f.write("So gia tri bi thieu o tung thuoc tinh: "+ '\n')
+c1 = df.isin(['?']).sum(axis=0)
+f.write(str(c1) + '\n')
+f.write("Cac gia tri trung binh hoac thuong xuyen xuat hien dung de thay the:" + '\n')
+for col in df.columns:
+    if df[col].dtypes == np.object:
+        popular_str = df[col].mode()[0]
+        df[col].replace({'?': popular_str}, inplace=True)
+        f.write(col + ": ")
+        f.write(popular_str+'\n')
+    else:
+        mean_value = df[col].mean()
+        df.replace({'?': mean_value}, inplace=True)
+        f.write(col + ": ")
+        f.write(str(mean_value)+'\n')
+df.to_csv('output.csv', index=False, header=True)
